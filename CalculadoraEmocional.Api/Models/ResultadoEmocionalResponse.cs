@@ -2,8 +2,8 @@ namespace CalculadoraEmocional.Api.Models
 {
     public class ResultadoEmocionalResponse
     {
-        public Guid EmpresaId { get; set; }
-        public Guid ColaboradorId { get; set; }
+        public int EmpresaId { get; set; }
+        public int ColaboradorId { get; set; }
         public DateOnly DataReferencia { get; set; }
 
         public double IndiceBemEstar { get; set; }

@@ -16,13 +16,24 @@ namespace CalculadoraEmocional.Api.Controllers
         }
 
         [HttpPost("checkin")]
-        public ActionResult<ResultadoEmocionalResponse> RealizarCheckin([FromBody] CheckinRequest request)
+        [Produces("application/json")]
+        public async Task<ActionResult<ResultadoEmocionalResponse>> RealizarCheckin([FromBody] CheckinRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var resultado = _service.Calcular(request);
+            var resultado = await _service.CalcularERegistrarAsync(request);
+
             return Ok(resultado);
         }
+
+        [HttpGet("indices")]
+        [Produces("application/json")]
+        public async Task<ActionResult<List<ResultadoEmocionalResponse>>> ListarIndices([FromQuery] int? colaboradorId)
+        {
+            var resultados = await _service.ListarIndicesAsync(colaboradorId);
+            return Ok(resultados);
+        }
+
     }
 }
