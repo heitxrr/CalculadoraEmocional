@@ -67,7 +67,7 @@ namespace CalculadoraEmocional.Api.Services
             await _context.SaveChangesAsync();
 
             // Monta resposta pra API
-            return new ResultadoEmocionalResponse
+            var resposta = new ResultadoEmocionalResponse
             {
                 EmpresaId = request.EmpresaId,
                 ColaboradorId = request.ColaboradorId,
@@ -78,11 +78,21 @@ namespace CalculadoraEmocional.Api.Services
                 DeveDispararAlerta = deveDispararAlerta,
                 Recomendacao = recomendacao
             };
+
+            resposta.Links = CriarLinksIndice(resposta.EmpresaId, resposta.ColaboradorId);
+
+            return resposta;
         }
 
-        // Listagem de índices
-        public async Task<List<ResultadoEmocionalResponse>> ListarIndicesAsync(int? colaboradorId = null)
+        // Listagem de índices com paginação
+        public async Task<(List<ResultadoEmocionalResponse> Items, int TotalCount)> ListarIndicesAsync(
+            int? colaboradorId = null,
+            int page = 1,
+            int pageSize = 10)
         {
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
             var query = _context.IndicesEmocionais.AsQueryable();
 
             if (colaboradorId.HasValue)
@@ -90,25 +100,61 @@ namespace CalculadoraEmocional.Api.Services
                 query = query.Where(i => i.ColaboradorId == colaboradorId.Value);
             }
 
+            var totalCount = await query.CountAsync();
+
             var indices = await query
                 .OrderByDescending(i => i.DataReferencia)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            var resposta = indices.Select(i => new ResultadoEmocionalResponse
+            var items = indices.Select(i =>
             {
-                EmpresaId = i.EmpresaId,
-                ColaboradorId = i.ColaboradorId,
-                DataReferencia = DateOnly.FromDateTime(i.DataReferencia),
-                IndiceBemEstar = i.IndiceBemEstar,
-                RiscoBurnout = i.RiscoBurnout,
-                NivelRisco = i.NivelRisco,
-                DeveDispararAlerta = i.NivelRisco == "alto",
-                Recomendacao = i.NivelRisco == "alto"
-                    ? "Risco de burnout alto. Acompanhe de perto este colaborador."
-                    : "Índice dentro da normalidade."
+                var res = new ResultadoEmocionalResponse
+                {
+                    EmpresaId = i.EmpresaId,
+                    ColaboradorId = i.ColaboradorId,
+                    DataReferencia = DateOnly.FromDateTime(i.DataReferencia),
+                    IndiceBemEstar = i.IndiceBemEstar,
+                    RiscoBurnout = i.RiscoBurnout,
+                    NivelRisco = i.NivelRisco,
+                    DeveDispararAlerta = i.NivelRisco == "alto",
+                    Recomendacao = i.NivelRisco == "alto"
+                        ? "Risco de burnout alto. Acompanhe de perto este colaborador."
+                        : "Índice dentro da normalidade."
+                };
+
+                res.Links = CriarLinksIndice(res.EmpresaId, res.ColaboradorId);
+                return res;
             }).ToList();
 
-            return resposta;
+            return (items, totalCount);
+        }
+
+        // 🔗 Helper para montar os links HATEOAS
+        private List<LinkResource> CriarLinksIndice(int empresaId, int colaboradorId)
+        {
+            return new List<LinkResource>
+            {
+                new LinkResource
+                {
+                    Rel = "self",
+                    Href = $"/api/v1/calculadora-emocional/indices?colaboradorId={colaboradorId}",
+                    Method = "GET"
+                },
+                new LinkResource
+                {
+                    Rel = "post-checkin",
+                    Href = "/api/v1/calculadora-emocional/checkin",
+                    Method = "POST"
+                },
+                new LinkResource
+                {
+                    Rel = "listar-indices",
+                    Href = "/api/v1/calculadora-emocional/indices",
+                    Method = "GET"
+                }
+            };
         }
     }
 }

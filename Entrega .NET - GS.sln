@@ -1,8 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculadoraEmocional.Api", "CalculadoraEmocional.Api\CalculadoraEmocional.Api.csproj", "{71869BD4-E9CE-D7B5-9427-369884EFFDBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculadoraEmocional.Tests", "CalculadoraEmocional.Tests\CalculadoraEmocional.Tests.csproj", "{36055556-5F73-4F8C-94FD-F0DFEBA1AB0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,6 +16,10 @@ Global
 		{71869BD4-E9CE-D7B5-9427-369884EFFDBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71869BD4-E9CE-D7B5-9427-369884EFFDBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71869BD4-E9CE-D7B5-9427-369884EFFDBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36055556-5F73-4F8C-94FD-F0DFEBA1AB0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36055556-5F73-4F8C-94FD-F0DFEBA1AB0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36055556-5F73-4F8C-94FD-F0DFEBA1AB0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36055556-5F73-4F8C-94FD-F0DFEBA1AB0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

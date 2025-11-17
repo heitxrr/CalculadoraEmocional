@@ -12,5 +12,8 @@ namespace CalculadoraEmocional.Api.Models
 
         public bool DeveDispararAlerta { get; set; }
         public string Recomendacao { get; set; } = string.Empty;
+
+        // HATEOAS
+        public List<LinkResource> Links { get; set; } = new();
     }
 }
