@@ -11,33 +11,28 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 var apiKey = builder.Configuration["ApiKey"];
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Calculadora Emocional API",
-        Version = "v2",
+        Version = "v1",
         Description = "API .NET para cálculo de bem-estar e risco de burnout em empresas híbridas.",
     });
 
-  
     c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
     {
-        Description = "Informe a API Key no header 'X-Api-Key'. Ex: workingsafe-adm (ou use o botão Authorize no Swagger).",
+        Description = "Informe a API Key'.",
         Name = "X-Api-Key",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
         Scheme = "ApiKeyScheme"
     });
-
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -55,32 +50,27 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
 builder.Services.AddHealthChecks()
     .AddCheck<DbHealthCheck>("azure_sql");
-
 
 builder.Services.AddDbContext<CalculadoraEmocionalContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("CalculadoraEmocionalConnection"),
         sqlOptions =>
         {
-            sqlOptions.CommandTimeout(60);        
-            sqlOptions.EnableRetryOnFailure(3);   
+            sqlOptions.CommandTimeout(60);
+            sqlOptions.EnableRetryOnFailure(3);
         }));
-
 
 builder.Services.AddScoped<CalculadoraEmocionalService>();
 
 var app = builder.Build();
-
 
 var logger = app.Logger;
 
 app.Use(async (context, next) =>
 {
     var correlationId = context.Request.Headers["X-Correlation-Id"].FirstOrDefault();
-
     if (string.IsNullOrWhiteSpace(correlationId))
         correlationId = Guid.NewGuid().ToString();
 
@@ -112,13 +102,14 @@ app.Use(async (context, next) =>
 {
     var path = context.Request.Path.Value ?? string.Empty;
 
-    if (path.StartsWith("/health") || path.StartsWith("/swagger"))
+    if (path.StartsWith("/health", StringComparison.OrdinalIgnoreCase) ||
+        path.StartsWith("/swagger", StringComparison.OrdinalIgnoreCase))
     {
         await next();
         return;
     }
 
-    if (path.StartsWith("/api"))
+    if (path.StartsWith("/api", StringComparison.OrdinalIgnoreCase))
     {
         if (!context.Request.Headers.TryGetValue("X-Api-Key", out var chaveEnviada) ||
             string.IsNullOrWhiteSpace(apiKey) ||
@@ -133,7 +124,6 @@ app.Use(async (context, next) =>
     await next();
 });
 
-
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -142,7 +132,6 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
