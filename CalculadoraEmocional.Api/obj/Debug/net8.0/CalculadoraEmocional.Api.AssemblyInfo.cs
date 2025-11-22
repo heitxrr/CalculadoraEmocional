@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CalculadoraEmocional.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ccd845683057b2bbccddee533c4025364de112c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51eb34ff1214bc40a640863587fda9c49467ae6c")]
 [assembly: System.Reflection.AssemblyProductAttribute("CalculadoraEmocional.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CalculadoraEmocional.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
