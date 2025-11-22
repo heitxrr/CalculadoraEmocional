@@ -24,13 +24,8 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Calculadora Emocional API",
-        Version = "v1",
-        Description = "API .NET para cálculo de bem-estar e risco de burnout em empresas híbridas (projeto acadêmico - Futuro do Trabalho).",
-        Contact = new OpenApiContact
-        {
-            Name = "Equipe GS .NET",
-            Email = "contato@empresa.com"
-        }
+        Version = "v2",
+        Description = "API .NET para cálculo de bem-estar e risco de burnout em empresas híbridas.",
     });
 
   
