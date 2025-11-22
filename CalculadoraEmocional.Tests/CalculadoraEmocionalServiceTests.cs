@@ -35,17 +35,12 @@ namespace CalculadoraEmocional.Tests
                 HorasTrabalhadas = 9
             };
 
-            // Fórmulas esperadas:
-            // Índice de Bem-Estar = (humor + foco + pausas) / 3
             var indiceEsperado = (request.Humor + request.Foco + request.Pausas) / 3.0;
 
-            // Risco de burnout = (horas trabalhadas × 0.2) − (pausas × 0.3)
             var riscoEsperado = (request.HorasTrabalhadas * 0.2) - (request.Pausas * 0.3);
 
-            // Act
             var resultado = await service.CalcularERegistrarAsync(request);
 
-            // Assert
             Assert.Equal(indiceEsperado, resultado.IndiceBemEstar, precision: 3);
             Assert.Equal(riscoEsperado, resultado.RiscoBurnout, precision: 3);
             Assert.Equal(request.EmpresaId, resultado.EmpresaId);

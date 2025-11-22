@@ -1,9 +1,7 @@
 namespace CalculadoraEmocional.Api.Models
 {
-    public class CheckinRequest
+    public class AtualizarCheckinRequest
     {
-        public int EmpresaId { get; set; }
-        public int ColaboradorId { get; set; }
         public int Humor { get; set; }
         public int Foco { get; set; }
         public int Pausas { get; set; }

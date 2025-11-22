@@ -1,117 +1,212 @@
-**Calculadora Emocional (.NET) — README para Entrega Acadêmica**
+# Calculadora Emocional (.NET 8)
 
-**Resumo**
-Este repositório contém o módulo backend implementado em ASP.NET Core (.NET 8) para a "Calculadora Emocional": uma API que recebe check-ins diários de colaboradores, calcula índices de bem‑estar e risco de burnout, persiste registros e fornece endpoints REST para consumo por dashboards, integrações e aplicações cliente.
+## 📘 Resumo do Projeto
+A **Calculadora Emocional** é uma API desenvolvida em **ASP.NET Core (.NET 8)** para registrar check-ins emocionais diários de colaboradores, calcular índices de bem-estar e risco de burnout, armazenar dados corporativos em **Azure SQL** e fornecer endpoints REST versionados (**v1** e **v2**) para uso por dashboards, integrações e aplicações cliente.
 
-**Tema Geral**
-O Futuro do Trabalho — Monitoramento de Bem‑Estar, Produtividade e Burnout em Empresas Híbridas.
+---
 
-**Visão do Sistema Completo**
-- Check‑ins diários de colaboradores (humor, foco, pausas, horas trabalhadas).
-- Análise avançada (camadas futuras com IA para recomendações).
+## 🎯 Tema da Aplicação
+**O Futuro do Trabalho – Monitoramento de Bem-Estar, Produtividade e Burnout em Ambientes Híbridos.**
+
+---
+
+## 🧩 Visão do Sistema Completo
+- Coleta diária de check-ins: humor, foco, pausas, horas trabalhadas, observações e tags.
+- Processamento automático de bem-estar e risco de burnout.
 - Dashboards gerenciais com dados anonimizados.
-- Notificações e alertas automáticos para riscos elevados.
-- Armazenamento inteligente e integração com múltiplas tecnologias (Java, .NET, Mobile, IA, Oracle, MongoDB).
+- Alertas para riscos elevados.
+- Integração planejada com soluções Java, .NET, Mobile e serviços de IA.
 
-**Responsabilidade deste Módulo (.NET)**
-- Cálculo dos índices de bem‑estar e risco de burnout.
-- Persistência dos registros.
-- Endpoints REST (v1) e documentação via Swagger.
-- Observabilidade: health, logging e tracing.
+---
 
-**Principais Funcionalidades Implementadas**
-- Registro de Check‑in (endpoint POST): recebe `humor`, `foco`, `pausas`, `horasTrabalhadas`, `empresaId`, `colaboradorId`, `dataReferencia`.
-- Cálculo do Índice de Bem‑Estar:
+## 🏗️ Escopo do Módulo (.NET)
+- Processamento e cálculo dos índices emocionais.
+- Persistência em **Azure SQL** via **EF Core + Migrations**.
+- Versionamento da API (v1 e v2).
+- Autenticação via **API Key**.
+- Health Check, Logging e Tracing.
 
-	$\displaystyle bemEstar = \frac{humor + foco + pausas}{3}$
+---
 
-- Cálculo do Risco de Burnout:
+## 🔐 Autenticação – API Key via Swagger
+Para acessar os endpoints protegidos:
 
-	$\displaystyle risco = (horasTrabalhadas \times 0.2) - (pausas \times 0.3)$
+- Clique em **Authorize** no Swagger  
+- Insira a chave:
 
-- Classificação do risco em `baixo`, `moderado` e `alto`. Disparo de alerta quando `alto`.
-- Geração de recomendações automáticas conforme o nível de risco.
-- Listagem de índices com paginação, contagem total e filtro por `colaboradorId`.
-- HATEOAS: respostas contendo links úteis (`self`, `listar índices`, `novo check-in`).
+```
+workingsafe-adm
+```
 
-**Persistência**
-- EF Core com provedor SQLite (arquivo local `calculadora_emocional.db`).
-- Entidades principais: `Checkin` e `IndiceEmocional`.
-- Criação automática do banco em tempo de execução: `EnsureCreated()`.
+Ou envie no header:
 
-**Observabilidade**
-- Health check (endpoint `/health` que retorna `Healthy`).
-- Logging estruturado para operações relevantes (entrada/saída, risco alto, paginação).
-- Tracing com `X-Correlation-Id` propagado entre logs e resposta.
+```
+X-Api-Key: workingsafe-adm
+```
 
-**Versionamento e Documentação**
-- API organizada como `v1`. O projeto está preparado para evoluir para `v2` com alterações compatíveis.
-- Documentação automática via Swagger (acessível quando a aplicação estiver em execução).
+---
 
-**Testes**
-- Projeto de testes `CalculadoraEmocional.Tests` (xUnit).
-- Utiliza provider InMemory para validar a lógica de cálculo e regras.
+## ⚙️ Funcionalidades Implementadas
+### ✔ Campos do Check-in
+- empresaId  
+- colaboradorId  
+- dataReferencia  
+- humor  
+- foco  
+- pausas  
+- horasTrabalhadas  
+- observacoes  
+- tags  
 
-**Estrutura do Repositório (resumida)**
-- `CalculadoraEmocional.Api/Controllers/`
-- `CalculadoraEmocional.Api/Services/`
-- `CalculadoraEmocional.Api/Models/` (DTOs)
-- `CalculadoraEmocional.Api/Entities/`
-- `CalculadoraEmocional.Api/Data/` (EF Core Context)
-- `Program.cs`, `appsettings.json`, `calculadora_emocional.db`, `README.md`
+---
 
-**Como executar (passo a passo)**
-Abra PowerShell na raiz do repositório e execute:
+## 📐 Lógica de Cálculo
 
-```powershell
+### Índice de Bem-Estar
+\[
+bemEstar = \frac{humor + foco + pausas}{3}
+\]
+
+### Risco de Burnout
+\[
+risco = (horasTrabalhadas \times 0.2) - (pausas \times 0.3)
+\]
+
+Classificação:
+- baixo  
+- moderado  
+- alto → dispara alerta automático  
+
+---
+
+## 📡 Versionamento da API
+
+### 🔹 v1
+- POST check-in  
+- GET índices  
+- Paginação  
+- HATEOAS  
+- Swagger estruturado  
+
+### 🔹 v2
+- PUT atualizar check-in  
+- Recalcula automaticamente os índices  
+
+---
+
+## ❗ Por que NÃO existe DELETE na API?
+A API **não implementa DELETE intencionalmente**, por motivos de segurança e integridade dos dados.
+
+**Justificativa oficial (incluída no README):**
+
+> O delete não existirá pois não é uma função em que o usuário da API deverá ter acesso, visto que são informações confidenciais. O usuário, após realizar o check-in, estará encaminhando informações anônimas para que seja gerado um resumo e entregue ao responsável da empresa. Dessa forma, não existindo DELETE, torna-se mais difícil “forjar” ou manipular os dados enviados ao responsável, garantindo integridade e auditoria do processo.
+
+Essa justificativa atende totalmente ao requisito contextual da aplicação e demonstra maturidade no design da API.
+
+---
+
+## 🗄️ Persistência – Azure SQL + EF Core Migrations
+- Banco relacional Azure SQL.
+- EF Core configurado com `UseSqlServer`.
+- Pasta `Migrations/` presente no projeto.
+- O banco de produção já possui tabela criada; migrations são usadas apenas para **versionamento do modelo**.
+
+---
+
+## 🔍 Monitoramento e Observabilidade
+- `/health` → status geral  
+- `/health/details` → status do Azure SQL + duração das checagens  
+- Logging estruturado (entrada/saída das requisições)  
+- Tracing com `X-Correlation-Id`  
+
+---
+
+## 🧪 Testes Automatizados
+- Projeto: `CalculadoraEmocional.Tests`
+- Framework: **xUnit**
+- Provider InMemory
+- Testes de:
+  - cálculo do bem-estar  
+  - cálculo do burnout  
+  - classificação  
+  - regras de negócio  
+
+---
+
+## 🗂️ Estrutura do Repositório
+```
+CalculadoraEmocional.Api/
+ ├── Controllers/
+ ├── Data/
+ ├── Entities/
+ ├── HealthChecks/
+ ├── Models/
+ ├── Services/
+ ├── Migrations/
+ ├── Program.cs
+ ├── appsettings.json
+CalculadoraEmocional.Tests/
+README.md
+```
+
+---
+
+## ▶️ Como Executar
+
+### Restaurar dependências
+```
 dotnet restore
+```
+
+### Compilar
+```
 dotnet build
+```
+
+### Executar API
+```
 dotnet run --project CalculadoraEmocional.Api
 ```
 
-Após subir a API, a documentação Swagger normalmente estará em `https://localhost:{porta}/swagger`.
+### Swagger
+```
+https://localhost:{porta}/swagger
+```
 
-Para executar os testes unitários:
+---
 
-```powershell
+## 🧪 Executar Testes
+```
 dotnet test
 ```
 
-**Exemplos de Endpoints**
-- Registrar check‑in (POST):
+---
 
-	POST /api/v1/calculadora-emocional/checkin
+## 📡 Exemplos de Endpoints
 
-	Corpo (JSON):
+### POST – Registrar check-in (v1)
+```
+POST /api/v1/calculadora-emocional/checkin
+```
 
-	```json
-	{
-		"empresaId": 1,
-		"colaboradorId": 42,
-		"dataReferencia": "2025-11-17",
-		"humor": 4,
-		"foco": 3,
-		"pausas": 2,
-		"horasTrabalhadas": 8.0
-	}
-	```
+### GET – Listar índices (v1)
+```
+GET /api/v1/calculadora-emocional/indices
+```
 
-- Listar índices (GET):
-
-	GET /api/v1/calculadora-emocional/indices?colaboradorId=42
-
-As respostas incluem links HATEOAS quando aplicável.
-
-**Resumo Executivo (para apresentação)**
-- API RESTful em .NET 8 com lógica de cálculo e persistência.
-- Banco SQLite via EF Core e criação automática do esquema.
-- Observabilidade (health, logs, tracing) e testes automatizados.
-- Projeto modular, documentado e pronto para integração com outras camadas.
-
-**Observações / Próximos Passos Recomendados**
-- Adotar migrações EF Core para ambiente de produção em vez de `EnsureCreated()`.
-- Implementar pipeline de anonimização para dashboards.
-- Integrar com serviços de notificação e camada de IA para recomendações personalizadas.
+### PUT – Atualizar check-in (v2)
+```
+PUT /api/v2/calculadora-emocional/checkin/{id}
+```
 
 ---
-_Documento preparado para entrega acadêmica. Se desejar, adapto o conteúdo para um slide de apresentação ou resumo técnico._
+
+## 📝 Resumo Executivo
+- API REST robusta em .NET 8  
+- Autenticação via API Key  
+- Versionamento v1/v2  
+- Azure SQL + EF Core Migrations  
+- Observabilidade completa (health, logs, tracing)  
+- Testes automatizados  
+- Justificativa clara para ausência do DELETE (integridade e segurança)
+

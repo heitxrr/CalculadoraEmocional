@@ -2,6 +2,8 @@ namespace CalculadoraEmocional.Api.Models
 {
     public class ResultadoEmocionalResponse
     {
+        public long IdCheckin { get; set; }
+
         public int EmpresaId { get; set; }
         public int ColaboradorId { get; set; }
         public DateOnly DataReferencia { get; set; }
@@ -13,7 +15,9 @@ namespace CalculadoraEmocional.Api.Models
         public bool DeveDispararAlerta { get; set; }
         public string Recomendacao { get; set; } = string.Empty;
 
-        // HATEOAS
+        public string? Observacoes { get; set; }
+        public string? Tags { get; set; }
+
         public List<LinkResource> Links { get; set; } = new();
     }
 }
