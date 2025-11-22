@@ -6,7 +6,7 @@ A **Calculadora Emocional** é uma API desenvolvida em **ASP.NET Core (.NET 8)**
 ---
 
 ## 🎯 Tema da Aplicação
-**O Futuro do Trabalho – Monitoramento de Bem-Estar, Produtividade e Burnout em Ambientes Híbridos.**
+** Workingsafe – Monitoramento de Bem-Estar, Produtividade e Burnout em Ambientes Híbridos.**
 
 ---
 
@@ -201,7 +201,7 @@ PUT /api/v2/calculadora-emocional/checkin/{id}
 
 ---
 
-## 📝 Resumo Executivo
+## 📝 Resumo
 - API REST robusta em .NET 8  
 - Autenticação via API Key  
 - Versionamento v1/v2  
