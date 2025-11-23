@@ -9,7 +9,7 @@ https://calculadoraemocional.onrender.com/swagger/
 ---
 
 ## 📘 Resumo do Projeto
-A **Calculadora Emocional** é uma API desenvolvida em **ASP.NET Core (.NET 8)** para registrar check-ins emocionais, calcular índices de bem-estar e risco de burnout, e fornecer endpoints REST versionados (v1 e v2).  
+A **Calculadora Emocional** é uma API desenvolvida em **ASP.NET Core (.NET 8)** para registrar check-ins emocionais, calcular índices de bem-estar e risco de burnout, e fornecer endpoints REST versionados (v1 e v2 e v3).  
 O sistema utiliza **Azure SQL**, autenticação via **API Key**, observabilidade (Health, Logging e Tracing) e testes automatizados com xUnit.
 
 ---
@@ -26,7 +26,7 @@ O sistema utiliza **Azure SQL**, autenticação via **API Key**, observabilidade
   - Risco de burnout + classificação  
 - Integração com Azure SQL  
 - Paginação e HATEOAS  
-- Versionamento v1/v2  
+- Versionamento v1/v2/v3  
 - Autenticação via API Key  
 - Observabilidade (health/details, correlation ID, logs estruturados)
 
@@ -52,13 +52,8 @@ X-Api-Key: workingsafe-adm
 - POST check-in  
 - GET índices  
 
----
-
-## ❗ Por que NÃO existe DELETE?
-A API não possui DELETE **por decisão de segurança e integridade dos dados**:
-
-> O delete não existirá pois não é uma função em que o usuário da API deverá ter acesso, visto que são informações confidenciais. O usuário, após realizar o check-in, estará encaminhando informações anônimas para que seja gerado um resumo e entregue ao responsável da empresa. Assim, não existindo DELETE, torna-se mais difícil “forjar” ou manipular dados enviados ao responsável.
-
+### **v3*
+- DELETE Remover check-in
 ---
 
 ## 🗄️ Persistência
