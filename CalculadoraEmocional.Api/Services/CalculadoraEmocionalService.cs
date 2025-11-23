@@ -2,6 +2,7 @@ using CalculadoraEmocional.Api.Data;
 using CalculadoraEmocional.Api.Entities;
 using CalculadoraEmocional.Api.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace CalculadoraEmocional.Api.Services
 {
@@ -49,11 +50,11 @@ namespace CalculadoraEmocional.Api.Services
             };
 
             await _context.Checkins.AddAsync(checkin);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
+
             var resposta = new ResultadoEmocionalResponse
             {
                 IdCheckin = checkin.IdCheckin,
-
                 EmpresaId = request.EmpresaId,
                 ColaboradorId = request.ColaboradorId,
                 DataReferencia = DateOnly.FromDateTime(agora),
@@ -116,7 +117,6 @@ namespace CalculadoraEmocional.Api.Services
                 var res = new ResultadoEmocionalResponse
                 {
                     IdCheckin = c.IdCheckin,
-
                     EmpresaId = 0,
                     ColaboradorId = (int)c.IdUsuario,
                     DataReferencia = DateOnly.FromDateTime(c.DataCheckin),
@@ -147,7 +147,6 @@ namespace CalculadoraEmocional.Api.Services
 
             if (checkin == null)
                 return null;
-
 
             checkin.Humor = request.Humor;
             checkin.Foco = request.Foco;
@@ -194,6 +193,19 @@ namespace CalculadoraEmocional.Api.Services
             resposta.Links = CriarLinksIndice(resposta.EmpresaId, resposta.ColaboradorId);
 
             return resposta;
+        }
+
+        public async Task<bool> ExcluirCheckinAsync(long idCheckin)
+        {
+            var checkin = await _context.Checkins
+                .FirstOrDefaultAsync(c => c.IdCheckin == idCheckin);
+
+            if (checkin == null)
+                return false;
+
+            _context.Checkins.Remove(checkin);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         private List<LinkResource> CriarLinksIndice(int empresaId, int colaboradorId)
